@@ -24,6 +24,11 @@ _SRC_DIR = Path(__file__).resolve().parent
 if str(_SRC_DIR) not in sys.path:
     sys.path.insert(0, str(_SRC_DIR))
 
+if sys.stdout and hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+if sys.stderr and hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+
 from core.config import setup_api_key
 
 
@@ -64,7 +69,7 @@ async def part3_assignment_suite():
     )
 
     try:
-        plugins = build_production_plugins(use_llm_judge=False)
+        plugins = build_production_plugins(use_llm_judge=True)
         audit, monitor = build_observability()
         pipeline = {"plugins": plugins, "audit": audit, "monitor": monitor}
         result = await run_assignment_suite(pipeline)
